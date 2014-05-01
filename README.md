@@ -1,6 +1,6 @@
-# etipswww
+# wyu-sing
 
-The old wyu singing bar suggested by @Jayin<br>
+The school singing place for students in WYU, suggested by @Jayin<br>
 Site: ~~<http://etipswww.duapp.com>~~ (Deprecated)
 
 ## Screenshots
