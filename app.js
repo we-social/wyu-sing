@@ -110,7 +110,7 @@ async.waterfall([
       }, function(err, item){
         if (item) return;
       var song = {
-        name: '歌曲'+ msgId,
+        name: '歌曲 '+ msgId,
         plays: 0,
         msgid: msgId,
         //username: msg[''],
