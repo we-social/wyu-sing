@@ -274,9 +274,11 @@ async.waterfall([
         'latest': { msgid: -1 },
         'hottest': { plays: -1, msgid: 1 }
       }
-    songColl.count({}, function (err, total) {
+    songColl.count({
+      published: true
+    }, function (err, total) {
       songColl.find({
-        published: false
+        published: true
       }, {
         sort: sorts[rank] || sorts['latest'],
         limit: limit,
