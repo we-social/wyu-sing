@@ -110,6 +110,7 @@ async.waterfall([
       }, function(err, item){
         if (item) return;
       var song = {
+        published: true,
         name: '歌曲 '+ msgId,
         plays: 0,
         msgid: msgId,
@@ -274,7 +275,9 @@ async.waterfall([
         'hottest': { plays: -1, msgid: 1 }
       }
     songColl.count({}, function (err, total) {
-      songColl.find({}, {
+      songColl.find({
+        published: false
+      }, {
         sort: sorts[rank] || sorts['latest'],
         limit: limit,
         skip: skip,
