@@ -97,7 +97,7 @@ async.waterfall([
       }
 
       // 保存文件
-      var filepath = path.join(presongDir, msgId + '.' + config.wx.voiceFormat);
+      var filepath = path.join(songDir, msgId + '.' + config.wx.voiceFormat);
       fs.exists(filepath, function(exists){
         if (exists) return;
       fs.writeFile(filepath, msg._buf, function (err) {
