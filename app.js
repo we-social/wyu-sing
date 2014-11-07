@@ -59,9 +59,7 @@ async.waterfall([
 
 
   // 登录账号
-  if (config.wx.loginAccount) {
-    wxVoiceThief.init(config.wx.account);    // thief
-  }
+  wxVoiceThief.init(config.wx.account);
   // 抓取voice
   setInterval(function () {
     wxVoiceThief.steal(function (err, msgs) {
@@ -70,7 +68,7 @@ async.waterfall([
         return;
       }
     
-    async.each(msg, function(msg, next){
+    async.each(msgs, function(msg, next){
       var msgId = msg['id'],
         //fakeId = msg['fakeid'],
         //nickname = msg['nick_name'],
@@ -101,7 +99,6 @@ async.waterfall([
       fs.exists(filepath, function(exists){
         if (exists) return;
       fs.writeFile(filepath, msg._buf, function (err) {
-        console.log(filepath);
         if (err) return console.error(err);
         console.info('New song file saved: ' + msgId);
       });

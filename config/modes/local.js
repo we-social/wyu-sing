@@ -13,7 +13,7 @@ module.exports = function (config) {
   _.extend(config.wx, {
     validGet: false,
     validPost: false,
-    loginAccount: false
+    loginAccount: true
   });
   return config;
 }
