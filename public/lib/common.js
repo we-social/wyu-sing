@@ -1,7 +1,8 @@
 // if not supported by Zepto
-if (!$().text) {
+if (typeof $ === 'undefined') {
   alert('珍爱生命 远离IE\n请换用新版IE或其他主流浏览器');
-  window.location = 'http://www.google.cn/intl/zh-CN/chrome/browser/';
+  //window.location = 'http://www.google.cn/intl/zh-CN/chrome/browser/';
+  window.location = 'http://se.360.cn';
 }
 
 function twobits(num) {
