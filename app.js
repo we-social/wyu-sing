@@ -4,10 +4,11 @@ var http = require('http'),
   _ = require('underscore'),
   async = require('async'),
   express = require('express'),
-  mode = (process.argv && process.argv[2]) || 'bae', // 运行模式
+  mode = (process.argv && process.argv[2]) || 'ecs', // 运行模式
   config = require('./config/')(mode),
   app = express(),
   Mongo = require('./lib/mongo'),
+  wxVoiceThief = require('./lib/wx/wx-voice-thief'),
   WxBase = require('./lib/wx/wxbase/'),
   wxBase = new WxBase(config.wx),
   adminAccounts = require('./private/admin-accounts');
@@ -44,10 +45,96 @@ async.waterfall([
   }
 ], function (err, db, port) {
   if (err) throw err;
+  var userColl = db.collection('users');
+  var presongColl = db.collection('presongs');
+  var songColl = db.collection('songs');
+
   app.set('db', db);
-  app.set('userColl', db.collection('users'));
-  app.set('presongColl', db.collection('presongs'));
-  app.set('songColl', db.collection('songs'));
+  app.set('userColl', userColl);
+  app.set('presongColl', presongColl);
+  app.set('songColl', songColl);
+
+  
+
+
+
+  // 登录账号
+  wxVoiceThief.init(config.wx.account);
+  // 抓取voice
+  setInterval(function () {
+    wxVoiceThief.steal(function (err, msgs) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+    
+    async.each(msgs, function(msg, next){
+      var msgId = msg['id'],
+        //fakeId = msg['fakeid'],
+        //nickname = msg['nick_name'],
+        playLength = msg['play_length'];
+      // 更新用户nickname和fakeid
+      //var userExt = {
+      //  fakeid: fakeId,
+      //  nickname: nickname
+      //}
+      //_.extend(user, userExt);
+      //userColl.update({
+      //  username: user.username
+      //}, {
+      //  $set: userExt
+      //}, function (err, num) {
+      //  console.info('User profile expanded: ' + user.username);
+      //});
+      if (playLength / 1000 < config.wx.minSeconds) {   // 时间不够长
+        //return res.sendWxMsg({
+        //  msgType: 'text',
+        //  content: '你的歌声好像不够' + minSeconds + '秒哦'
+        //});
+        return next(null);
+      }
+
+      // 保存文件
+      var filepath = path.join(songDir, msgId + '.' + config.wx.voiceFormat);
+      fs.exists(filepath, function(exists){
+        if (exists) return;
+      fs.writeFile(filepath, msg._buf, function (err) {
+        if (err) return console.error(err);
+        console.info('New song file saved: ' + msgId);
+      });
+      });
+
+      // 保存记录
+      songColl.findOne({
+        msgid: msgId
+      }, function(err, item){
+        if (item) return;
+      var song = {
+        published: true,
+        name: '歌曲 '+ msgId,
+        plays: 0,
+        msgid: msgId,
+        //username: msg[''],
+        fakeid: msg['fakeid'],
+        nickname: msg['nick_name'],
+        createtime: msg['date_time'],  // 单位 s
+        playlength: Math.max(1, Math.round(playLength / 1000))  // 单位 s
+      }
+      songColl.insert(song, function (err, docs) {
+        console.info('New song added: ' + msgId);
+      });
+      });
+
+    });
+      // 跳转activity
+      //self.activityHash['submit'].welcome(req, res);
+    });
+  }, 1000 * 20); // 20s
+
+
+
+
+
 
   // 使用 wxbase
   wxBase.watch(app, config.wxPath);
@@ -187,8 +274,12 @@ async.waterfall([
         'latest': { msgid: -1 },
         'hottest': { plays: -1, msgid: 1 }
       }
-    songColl.count({}, function (err, total) {
-      songColl.find({}, {
+    songColl.count({
+      published: true
+    }, function (err, total) {
+      songColl.find({
+        published: true
+      }, {
         sort: sorts[rank] || sorts['latest'],
         limit: limit,
         skip: skip,
@@ -204,8 +295,12 @@ async.waterfall([
   app.get('/song/sample', function (req, res) {
     var songColl = app.get('songColl'),
       limit = parseInt(req.query['limit']) || 1;
-    songColl.count({}, function (err, total) {
-      songColl.find({}, {
+    songColl.count({
+      published: true
+    }, function (err, total) {
+      songColl.find({
+        published: true
+      }, {
         limit: limit,
         skip: Math.floor(Math.random() * total),
         fields: ['msgid']      // 提取相应的列
@@ -219,7 +314,10 @@ async.waterfall([
     var msgId = parseInt(req.params['id']),
       filePath = app.getSongFilePathById(msgId);
     if (!fs.existsSync(filePath)) return res.send(404);    // 文件要存在
-    songColl.findOne({ msgid: msgId }, function (err, song) {
+    songColl.findOne({
+      published: true,
+      msgid: msgId
+    }, function (err, song) {
       if (!song) return res.send(404);   // 记录要存在
       var downname = msgId + '- ' + song.name;    // 文件名
       res.download(filePath, encodeURI(downname));
@@ -237,7 +335,10 @@ async.waterfall([
   // 查阅歌曲
   app.get('/song/view/:id', function (req, res) {
     var msgId = parseInt(req.params['id']);
-    songColl.findOne({ msgid: msgId }, {
+    songColl.findOne({
+      published: true,
+      msgid: msgId
+    }, {
       // 提取相应的列
       fields: ['msgid', 'name', 'playlength', 'plays', 'createtime']
     }, function (err, song) {

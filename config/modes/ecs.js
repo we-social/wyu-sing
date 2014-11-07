@@ -3,7 +3,7 @@ var _ = require('underscore');
 module.exports = function (config) {
   _.extend(config, {
     env: 'production',
-    port: 3099,
+    port: process.env.PORT || 80,
     mongo: {
       host: 'localhost',
       port: 27017,

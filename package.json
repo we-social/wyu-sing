@@ -1,10 +1,10 @@
 {
   "name": "wyu-sing",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "The school singing place for students in WYU",
   "meta": {
     "title": "邑大唱吧",
-    "year": "2013",
+    "year": "2014",
     "studio": "袂卓工作室"
   },
   "repository": {
