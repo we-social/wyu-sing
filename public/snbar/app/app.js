@@ -75,6 +75,7 @@ app.gotoRandomSong = function () {
     if (!_.isObject(data)) data = $.parseJSON(data);
     var songs = data['songs'];
     if (!songs) throw new Error('歌曲加载失败');
+    if (!songs.length) return app.notify('一首歌都没有..');
     app.loadPage('#song?id=' + songs[0].msgid);
   });
 }

@@ -295,8 +295,12 @@ async.waterfall([
   app.get('/song/sample', function (req, res) {
     var songColl = app.get('songColl'),
       limit = parseInt(req.query['limit']) || 1;
-    songColl.count({}, function (err, total) {
-      songColl.find({}, {
+    songColl.count({
+      published: true
+    }, function (err, total) {
+      songColl.find({
+        published: true
+      }, {
         limit: limit,
         skip: Math.floor(Math.random() * total),
         fields: ['msgid']      // 提取相应的列
@@ -310,7 +314,10 @@ async.waterfall([
     var msgId = parseInt(req.params['id']),
       filePath = app.getSongFilePathById(msgId);
     if (!fs.existsSync(filePath)) return res.send(404);    // 文件要存在
-    songColl.findOne({ msgid: msgId }, function (err, song) {
+    songColl.findOne({
+      published: true,
+      msgid: msgId
+    }, function (err, song) {
       if (!song) return res.send(404);   // 记录要存在
       var downname = msgId + '- ' + song.name;    // 文件名
       res.download(filePath, encodeURI(downname));
@@ -328,7 +335,10 @@ async.waterfall([
   // 查阅歌曲
   app.get('/song/view/:id', function (req, res) {
     var msgId = parseInt(req.params['id']);
-    songColl.findOne({ msgid: msgId }, {
+    songColl.findOne({
+      published: true,
+      msgid: msgId
+    }, {
       // 提取相应的列
       fields: ['msgid', 'name', 'playlength', 'plays', 'createtime']
     }, function (err, song) {
