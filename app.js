@@ -70,7 +70,7 @@ async.waterfall([
         return;
       }
     
-    async.each(msg. function(msg, next){
+    async.each(msg, function(msg, next){
       var msgId = msg['id'],
         //fakeId = msg['fakeid'],
         //nickname = msg['nick_name'],
