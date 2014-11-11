@@ -39,7 +39,8 @@ app.showSong = function () {
 
     $audio.on('ended',function () {
       app.toggleSong(false);
-    }).attr('src', '/song/down/' + msgId); // 加载歌曲
+    }).attr('preload', '') // 预加载
+    .attr('src', '/song/down/' + msgId); // 加载歌曲
 
     $toggle.on('click', app.toggleSong)
       .find('#play').enable();
