@@ -24,7 +24,7 @@ app.init = function () {
     }
   });
 
-  app.entry = window.location.origin = '/snbar/';
+  app.entry = window.location.origin + '/snbar/';
   // 微信分享
   app.wxImg = app.entry + '/logo.jpg';
   app.wxLink = app.entry;
