@@ -116,7 +116,8 @@
   // 添加监听
   Wechat.prototype.on = function(name, data, callback) {
     if(!name) return;
-    if(typeof data === 'function') {
+    //if(typeof data === 'function') {
+    if (arguments.length < 3) {
       callback = data;
       data = null;
     }
