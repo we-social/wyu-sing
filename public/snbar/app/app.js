@@ -30,20 +30,14 @@ app.init = function () {
   app.wxLink = app.entry;
   app.wxTitle = '一分钟歌声';
   app.wxDesc = '';
-  var wxData = {
-    // 这里需要特别说明的是，建议不要用新浪微博的图片地址，要么你试试，哈哈
-    'img': function(){
-      return app.wxImg;
-    },
-    'link': function(){
-      return app.wxLink;
-    },
-    'desc': function(){
-      return app.wxDesc;
-    },
-    'title': function(){
-      return app.wxTitle;
-    }
+  var wxData = function() {
+    return {
+      // 这里需要特别说明的是，建议不要用新浪微博的图片地址，要么你试试，哈哈
+      'img': app.wxImg,
+      'link': app.wxLink,
+      'desc': app.wxDesc,
+      'title': app.wxTitle
+    };
   };
   wechat('friend', wxData, wxCallback);     // 朋友
   wechat('timeline', wxData, wxCallback);   // 朋友圈
