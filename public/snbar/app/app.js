@@ -23,6 +23,29 @@ app.init = function () {
       app.loadPage(href)
     }
   });
+
+  // 微信分享
+  app.desc = '';
+  var wxData = {
+    // 这里需要特别说明的是，建议不要用新浪微博的图片地址，要么你试试，哈哈
+    'img': window.location.origin + '/snbar/logo.jpg',
+    'link': function(){
+      return window.location.href;
+    },
+    'desc': function(){
+      return app.desc;
+    },
+    'title': function(){
+      return document.title;
+    }
+  };
+  wechat('friend', wxData, wxCallback);     // 朋友
+  wechat('timeline', wxData, wxCallback);   // 朋友圈
+  wechat('weibo', wxData, wxCallback);      // 微博
+
+  function wxCallback(res) {
+    console.log(JSON.stringify(res))
+  }
 }
 
 app.reloadPage = function (success) {
@@ -40,7 +63,7 @@ app.loadPage = function (hash, success) {
       app.lastParams = app.params;
       app.params = getHashParams();
       app.$frame.html(html);
-      window.scrollTo(0); // 窗口返回最顶
+      window.scrollTo(0, 0); // 窗口返回最顶
       success && success();
     },
     error: function () {

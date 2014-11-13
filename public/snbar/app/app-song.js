@@ -2,7 +2,7 @@ app.showSong = function () {
   var id = parseInt(app.params['id']),
     $frame = app.$frame,
     $back = $frame.find('#back')
-  $tableSong = $frame.find('#table-song'),
+    $tableSong = $frame.find('#table-song'),
     $msgid = $tableSong.find('#msgid'),   // 千万要防止注入
     $songname = $tableSong.find('#songname'),
     $createtime = $tableSong.find('#createtime'),
@@ -26,7 +26,12 @@ app.showSong = function () {
     var msgId = song['msgid'];
     $msgid.text(msgId);
     $songname.text(song['name']);
-    $playlength.text(song['playlength'] + '″');
+
+    var playlengthStr = song['playlength'] + '″'
+    $playlength.text(playlengthStr);
+
+    app.desc = song['name'] + ' - ' + playlengthStr;
+
     $plays.text(song['plays']);
     $createtime.text(song['createtime'] ? (function (t) {
       var d = new Date(t),

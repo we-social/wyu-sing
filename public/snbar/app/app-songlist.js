@@ -2,6 +2,10 @@ app.showSongList = function () {
   var countPerPage = 10,
     params = app.params,
     rank = params['rank'] || 'latest',
+    rankStr = ({
+      'latest': '最新',
+      'hottest': '最火'
+    })[rank],
     page = parseInt(params['page']) || 1,
     $frame = app.$frame,
     $rank = $frame.find('#rank'),
@@ -12,10 +16,7 @@ app.showSongList = function () {
     $random = $frame.find('#random'),
     $formSearch = $frame.find('#form-search');
 
-  $rank.text({
-    'latest': '最新',
-    'hottest': '最火'
-  }[rank]);
+  $rank.text(rankStr);
   $page.text(page);
   $random.on('click', app.gotoRandomSong);
   $formSearch.on('submit', function (ev) {
@@ -23,6 +24,11 @@ app.showSongList = function () {
     var msgid = $(this).find('input').val();
     app.loadPage('#song?id=' + msgid);
   });
+
+  app.desc = rankStr + '列表';
+  if (page > 1) {
+    app.desc += ' - 第' + page + '页';
+  }
 
   $.get('/song/list', {
     'rank': rank,
