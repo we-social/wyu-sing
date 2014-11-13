@@ -25,10 +25,8 @@ app.showSongList = function () {
     app.loadPage('#song?id=' + msgid);
   });
 
-  app.desc = rankStr + '列表';
-  if (page > 1) {
-    app.desc += ' - 第' + page + '页';
-  }
+  app.wxLink = app.entry;
+  app.wxDesc = rankStr + '列表';
 
   $.get('/song/list', {
     'rank': rank,

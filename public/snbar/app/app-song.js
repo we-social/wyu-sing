@@ -30,7 +30,8 @@ app.showSong = function () {
     var playlengthStr = song['playlength'] + '″'
     $playlength.text(playlengthStr);
 
-    app.desc = song['name'] + ' - ' + playlengthStr;
+    app.wxLink = window.location.href;
+    app.wxDesc = song['name'] + ' - ' + playlengthStr;
 
     $plays.text(song['plays']);
     $createtime.text(song['createtime'] ? (function (t) {

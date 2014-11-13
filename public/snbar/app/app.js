@@ -24,19 +24,25 @@ app.init = function () {
     }
   });
 
+  app.entry = window.location.origin = '/snbar/';
   // 微信分享
-  app.desc = '';
+  app.wxImg = app.entry + '/logo.jpg';
+  app.wxLink = app.entry;
+  app.wxTitle = '一分钟歌声';
+  app.wxDesc = '';
   var wxData = {
     // 这里需要特别说明的是，建议不要用新浪微博的图片地址，要么你试试，哈哈
-    'img': window.location.origin + '/snbar/logo.jpg',
+    'img': function(){
+      return app.wxImg;
+    },
     'link': function(){
-      return window.location.href;
+      return app.wxLink;
     },
     'desc': function(){
-      return app.desc;
+      return app.wxDesc;
     },
     'title': function(){
-      return document.title;
+      return app.wxTitle;
     }
   };
   wechat('friend', wxData, wxCallback);     // 朋友
