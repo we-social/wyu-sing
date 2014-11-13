@@ -129,7 +129,7 @@ async.waterfall([
       // 跳转activity
       //self.activityHash['submit'].welcome(req, res);
     });
-  }, 1000 * 20); // 20s
+  }, 1000 * 40); // 40s
 
 
 

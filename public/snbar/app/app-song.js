@@ -42,12 +42,15 @@ app.showSong = function () {
     }).attr('preload', '') // 预加载
     .attr('src', '/song/down/' + msgId); // 加载歌曲
 
-    $toggle.on('click', app.toggleSong)
-      .find('#play').enable();
+    $toggle.on('click', app.toggleSong);
+      //.find('#play').enable();
 
-    $down.on('click',function () {
-      app.downloadSong(msgId);
-    }).enable();
+    //$down.on('click',function () {
+    //  app.downloadSong(msgId);
+    //}).enable();
+    $down.addClass('external')
+      //.attr('target', '_blank')
+      .attr('href', '/song/down/' + msgId);
   });
 }
 
