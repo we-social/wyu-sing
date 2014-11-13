@@ -310,8 +310,9 @@ async.waterfall([
     });
   });
   // 播放/下载歌曲
-  app.get('/song/down/:id', function (req, res) {
-    var msgId = parseInt(req.params['id']),
+  app.get('/song/down/:file', function (req, res) {
+    var file = req.params['file'],
+      msgId = parseInt(file),
       filePath = app.getSongFilePathById(msgId);
     if (!fs.existsSync(filePath)) return res.send(404);    // 文件要存在
     songColl.findOne({

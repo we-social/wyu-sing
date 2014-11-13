@@ -40,7 +40,8 @@ app.showSong = function () {
     $audio.on('ended',function () {
       app.toggleSong(false);
     }).attr('preload', '') // 预加载
-    .attr('src', '/song/down/' + msgId); // 加载歌曲
+    // 加上.mp3后缀 格式友好
+    .attr('src', '/song/down/' + msgId + '.mp3'); // 加载歌曲
 
     $toggle.on('click', app.toggleSong);
       //.find('#play').enable();
@@ -49,8 +50,8 @@ app.showSong = function () {
     //  app.downloadSong(msgId);
     //}).enable();
     $down.addClass('external')
-      //.attr('target', '_blank')
-      .attr('href', '/song/down/' + msgId);
+      .attr('target', '_blank')
+      .attr('href', '/song/down/' + msgId + '.mp3');
   });
 }
 
