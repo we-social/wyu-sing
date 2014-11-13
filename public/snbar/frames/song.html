@@ -18,6 +18,10 @@
   #audio {
     display: none;
   }
+
+  #frame > .page {
+    margin-top: -14px;
+  }
 </style>
 
 <div class="page secondary">
@@ -84,39 +88,39 @@
 
             <audio id="audio"></audio>
 
-            <button id="random" class="shortcut">
+            <a id="random" class="shortcut">
                             <span class="icon">
                                 <i class="icon-link-2"></i>
                             </span>
                             <span class="label">
                                 随机听
                             </span>
-            </button>
-            <button id="down" class="shortcut" disabled>
+            </a>
+            <a id="down" class="shortcut">
                             <span class="icon">
                                 <i class="icon-download-2"></i>
                             </span>
                             <span class="label">
                                 下载
                             </span>
-            </button>
+            </a>
             <div id="toggle" class="off">
-              <button id="play" class="shortcut last" disabled>
+              <a id="play" class="shortcut last">
                                 <span class="icon">
                                     <i class="icon-play"></i>
                                 </span>
                                 <span class="label">
                                     播放
                                 </span>
-              </button>
-              <button id="pause" class="shortcut last">
+              </a>
+              <a id="pause" class="shortcut last">
                                 <span class="icon">
                                     <i class="icon-pause"></i>
                                 </span>
                                 <span class="label">
                                     暂停
                                 </span>
-              </button>
+              </a>
             </div>
 
             <div class="notices">

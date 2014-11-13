@@ -2,7 +2,7 @@ app.showSong = function () {
   var id = parseInt(app.params['id']),
     $frame = app.$frame,
     $back = $frame.find('#back')
-  $tableSong = $frame.find('#table-song'),
+    $tableSong = $frame.find('#table-song'),
     $msgid = $tableSong.find('#msgid'),   // 千万要防止注入
     $songname = $tableSong.find('#songname'),
     $createtime = $tableSong.find('#createtime'),
@@ -26,7 +26,13 @@ app.showSong = function () {
     var msgId = song['msgid'];
     $msgid.text(msgId);
     $songname.text(song['name']);
-    $playlength.text(song['playlength'] + '″');
+
+    var playlengthStr = song['playlength'] + '″'
+    $playlength.text(playlengthStr);
+
+    app.wxLink = window.location.href;
+    app.wxDesc = song['name'] + ' - ' + playlengthStr;
+
     $plays.text(song['plays']);
     $createtime.text(song['createtime'] ? (function (t) {
       var d = new Date(t),
@@ -40,14 +46,18 @@ app.showSong = function () {
     $audio.on('ended',function () {
       app.toggleSong(false);
     }).attr('preload', '') // 预加载
-    .attr('src', '/song/down/' + msgId); // 加载歌曲
+    // 加上.mp3后缀 格式友好
+    .attr('src', '/song/down/' + msgId + '.mp3'); // 加载歌曲
 
-    $toggle.on('click', app.toggleSong)
-      .find('#play').enable();
+    $toggle.on('click', app.toggleSong);
+      //.find('#play').enable();
 
-    $down.on('click',function () {
-      app.downloadSong(msgId);
-    }).enable();
+    //$down.on('click',function () {
+    //  app.downloadSong(msgId);
+    //}).enable();
+    $down.addClass('external')
+      .attr('target', '_blank')
+      .attr('href', '/song/down/' + msgId + '.mp3');
   });
 }
 
